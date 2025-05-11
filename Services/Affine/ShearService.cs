@@ -1,12 +1,22 @@
 ﻿using Emgu.CV.Structure;
 using Emgu.CV;
 using LR2.Models;
+using LR2.Interfaces;
 
 namespace LR2.Services.Affine
 {
-    internal class ShearService
+    internal class ShearService : IAffineOperation
     {
-        public static Image<Bgr, byte> ShearCv(Image<Bgr, byte> image, float shift, ShearDirection direction)
+        private float shift;
+        private ShearDirection direction;
+
+        public ShearService(float shift, ShearDirection direction)
+        {
+            this.shift = shift;
+            this.direction = direction;
+        }
+
+        public Image<Bgr, byte> Apply(Image<Bgr, byte> image)
         {
             var newSize = CalculateNewSize(image, shift, direction, out var offsetX, out var offsetY);
             var newImage = new Image<Bgr, byte>(newSize.Width, newSize.Height);
@@ -17,7 +27,7 @@ namespace LR2.Services.Affine
             return newImage;
         }
 
-        private static (int Width, int Height) CalculateNewSize(Image<Bgr, byte> image, float shift, ShearDirection direction, out int offsetX, out int offsetY)
+        private (int Width, int Height) CalculateNewSize(Image<Bgr, byte> image, float shift, ShearDirection direction, out int offsetX, out int offsetY)
         {
             int width = image.Width;
             int height = image.Height;
@@ -45,7 +55,7 @@ namespace LR2.Services.Affine
             return (width, height);
         }
 
-        private static void ApplyShear(Image<Bgr, byte> source, Image<Bgr, byte> target, float shift, ShearDirection direction, int offsetX, int offsetY)
+        private void ApplyShear(Image<Bgr, byte> source, Image<Bgr, byte> target, float shift, ShearDirection direction, int offsetX, int offsetY)
         {
             for (int y = 0; y < source.Height; y++)
             {
@@ -64,7 +74,7 @@ namespace LR2.Services.Affine
             }
         }
 
-        private static (int NewX, int NewY) CalculateNewCoordinates(int x, int y, float shift, ShearDirection direction, int width, int height)
+        private (int NewX, int NewY) CalculateNewCoordinates(int x, int y, float shift, ShearDirection direction, int width, int height)
         {
             int newX = x;
             int newY = y;

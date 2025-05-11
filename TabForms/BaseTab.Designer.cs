@@ -1,6 +1,6 @@
 ﻿namespace LR2.TabForms
 {
-    partial class BaseTab
+    public abstract partial class BaseTab
     {
         /// <summary> 
         /// Обязательная переменная конструктора.

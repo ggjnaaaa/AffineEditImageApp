@@ -1,15 +1,23 @@
 ﻿using Emgu.CV.Structure;
 using Emgu.CV;
+using LR2.Interfaces;
 
 namespace LR2.Services.Affine
 {
-    internal class HomographyService
+    internal class HomographyService : IAffineOperation
     {
-        public static Image<Bgr, byte> ApplyHomography(Image<Bgr, byte> sourceImage, Point[] sourcePoints)
-        {
-            var destinationSize = sourceImage.Size;
+        private Point[] sourcePoints;
 
-            // Преобразуем Point[] → PointF[]
+        public HomographyService(Point[] sourcePoints)
+        {
+            this.sourcePoints = sourcePoints;
+        }
+
+        public Image<Bgr, byte> Apply(Image<Bgr, byte> image)
+        {
+            var destinationSize = image.Size;
+
+            // Преобразуем Point[] в PointF[]
             var srcPoints = sourcePoints.Select(p => new PointF(p.X, p.Y)).ToArray();
 
             var destPoints = new PointF[]
@@ -22,7 +30,7 @@ namespace LR2.Services.Affine
 
             var homographyMatrix = CvInvoke.GetPerspectiveTransform(srcPoints, destPoints);
             var destImage = new Image<Bgr, byte>(destinationSize);
-            CvInvoke.WarpPerspective(sourceImage, destImage, homographyMatrix, destinationSize);
+            CvInvoke.WarpPerspective(image, destImage, homographyMatrix, destinationSize);
 
             return destImage;
         }

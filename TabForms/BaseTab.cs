@@ -3,7 +3,7 @@ using LR2.Models;
 
 namespace LR2.TabForms
 {
-    public partial class BaseTab : UserControl, ITabEvent
+    public abstract partial class BaseTab : UserControl, ITabEvent
     {
         public event Action ImageUpdated;
 

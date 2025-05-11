@@ -1,11 +1,20 @@
 ﻿using Emgu.CV.Structure;
 using Emgu.CV;
+using LR2.Interfaces;
 
 namespace LR2.Services.Affine
 {
-    internal class ScaleService
+    internal class ScaleService : IAffineOperation
     {
-        public static Image<Bgr, byte> ScaleCv(Image<Bgr, byte> image, int scaleX, int scaleY)
+        private int scaleX, scaleY;
+
+        public ScaleService(int scaleX, int scaleY)
+        {
+            this.scaleX = scaleX;
+            this.scaleY = scaleY;
+        }
+
+        public Image<Bgr, byte> Apply(Image<Bgr, byte> image)
         {
             int newWidth = image.Width + scaleX;
             int newHeight = image.Height + scaleY;

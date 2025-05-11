@@ -1,12 +1,21 @@
 ﻿using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using Emgu.CV;
+using LR2.Interfaces;
 
 namespace LR2.Services.Affine
 {
-    internal class FlipService
+    internal class FlipService : IAffineOperation
     {
-        public static Image<Bgr, byte> FlipImage(Image<Bgr, byte> image, bool reflectHorizontally, bool reflectVertically)
+        private bool reflectHorizontally, reflectVertically;
+
+        public FlipService(bool reflectHorizontally, bool reflectVertically)
+        {
+            this.reflectHorizontally = reflectHorizontally;
+            this.reflectVertically = reflectVertically;
+        }
+
+        public Image<Bgr, byte> Apply(Image<Bgr, byte> image)
         {
             var reflected = new Image<Bgr, byte>(image.Size);
 

@@ -1,11 +1,21 @@
 ﻿using Emgu.CV.Structure;
 using Emgu.CV;
+using LR2.Interfaces;
 
 namespace LR2.Services.Affine
 {
-    internal class RotateService
+    internal class RotateService : IAffineOperation
     {
-        public static Image<Bgr, byte> RotateImage(Image<Bgr, byte> image, float angleDegrees, Point center)
+        private float angleDegrees;
+        private Point center;
+
+        public RotateService(float angleDegrees, Point center)
+        {
+            this.angleDegrees = angleDegrees;
+            this.center = center;
+        }
+
+        public Image<Bgr, byte> Apply(Image<Bgr, byte> image)
         {
             using var rotationMatrix = new Mat();
             CvInvoke.GetRotationMatrix2D(center, angleDegrees, 1.0, rotationMatrix);
@@ -40,7 +50,7 @@ namespace LR2.Services.Affine
             return rotated;
         }
 
-        private static PointF TransformPoint(Matrix<double> matrix, Point pt)
+        private PointF TransformPoint(Matrix<double> matrix, Point pt)
         {
             float x = (float)(matrix[0, 0] * pt.X + matrix[0, 1] * pt.Y + matrix[0, 2]);
             float y = (float)(matrix[1, 0] * pt.X + matrix[1, 1] * pt.Y + matrix[1, 2]);
